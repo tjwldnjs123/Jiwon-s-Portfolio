@@ -22,15 +22,22 @@ interface Props {
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload?.length) {
+    const { name, description } = payload[0].payload;
+
     return (
-      <div className="p-2 bg-white border rounded shadow text-sm">
-        <strong>{payload[0].payload.name}</strong>
-        <p>{payload[0].payload.description}</p>
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg p-4 max-w-xs text-left">
+        <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-2">
+          📌 {name}
+        </h4>
+        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+          {description}
+        </p>
       </div>
     );
   }
   return null;
 };
+
 
 
 const CustomDot: React.FC<any> = (props) => {
