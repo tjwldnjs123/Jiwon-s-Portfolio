@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { BiWalk } from "react-icons/bi"; 
+import { BiWalk } from "react-icons/bi";
 
 type DataItem = {
   name: string;
@@ -38,10 +38,8 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-
-
 const CustomDot: React.FC<any> = (props) => {
-  const { cx, cy, index, activeIndex } = props;
+  const { cx, cy, index, activeIndex, onClick } = props;
   if (cx === undefined || cy === undefined) return null;
 
   const isActive = index === activeIndex;
@@ -53,6 +51,8 @@ const CustomDot: React.FC<any> = (props) => {
       y={cy - iconSize / 2}
       width={iconSize}
       height={iconSize}
+      onClick={onClick}
+      style={{ cursor: "pointer" }}
     >
       <div
         style={{
@@ -70,64 +70,87 @@ const CustomDot: React.FC<any> = (props) => {
 };
 
 const SimpleLineChart: React.FC<Props> = ({ data, onHover }) => {
-  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    handleResize(); 
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const activeItem = activeIndex !== null ? data[activeIndex] : null;
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <LineChart
-        data={data}
-        margin={{ top: 20, right: 30, bottom: 40, left: 35 }} 
-        onMouseMove={(e) => {
-          if (e.activeTooltipIndex !== undefined && e.activePayload) {
-            setActiveIndex(e.activeTooltipIndex);
-            onHover?.(e.activePayload[0].payload.description);
-          }
-        }}
-        onMouseLeave={() => {
-          onHover?.("");
-          setActiveIndex(null);
-        }}
-      >
-        <XAxis
-        dataKey="name"
-        axisLine={false}
-        tickLine={false}
-        tick={{ fontSize: 12 }}
-        label={{
-          value: "(년도)",
-          position: "insideBottomRight",
-          offset: -8,
-          style: { fill: "#6B7280", fontSize: 12 },
-        }}
-      />
-
-      <YAxis
-        domain={[0, 100]}
-        width={30}
-        axisLine={false}
-        tickLine={false}
-        tick={{ fontSize: 12 }}
-        label={{
-          value: "성장률(%)",
-          angle: 0, 
-          position: "top",
-          offset: 10, 
-          style: { fill: "#6B7280", fontSize: 12 },
-        }}
-      />
-
-
-
-        <Tooltip content={<CustomTooltip />} />
-        <Line
-          type="monotone"
-          dataKey="성장률"
-          stroke="#3b82f6"
-          strokeWidth={3}
-          dot={(props) => <CustomDot {...props} activeIndex={activeIndex} />}
-        />
-      </LineChart>
-    </ResponsiveContainer>
+    <div className="w-full h-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart
+          data={data}
+          margin={{ top: 20, right: 30, bottom: 40, left: 35 }}
+          onMouseMove={(e) => {
+            if (!isMobile && e.activeTooltipIndex !== undefined && e.activePayload) {
+              setActiveIndex(e.activeTooltipIndex);
+              onHover?.(e.activePayload[0].payload.description);
+            }
+          }}
+          onMouseLeave={() => {
+            if (!isMobile) {
+              setActiveIndex(null);
+              onHover?.("");
+            }
+          }}
+        >
+          <XAxis
+            dataKey="name"
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: 12 }}
+            label={{
+              value: "(년도)",
+              position: "insideBottomRight",
+              offset: -8,
+              style: { fill: "#6B7280", fontSize: 12 },
+            }}
+          />
+          <YAxis
+            domain={[0, 100]}
+            width={30}
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: 12 }}
+            label={{
+              value: "성장률(%)",
+              angle: 0,
+              position: "top",
+              offset: -20,
+              style: { fill: "#6B7280", fontSize: 12 },
+            }}
+          />
+          {!isMobile && <Tooltip content={<CustomTooltip />} />}
+          <Line
+            type="monotone"
+            dataKey="성장률"
+            stroke="#3b82f6"
+            strokeWidth={3}
+            dot={(props) => (
+              <CustomDot
+                {...props}
+                activeIndex={activeIndex}
+                onClick={() => {
+                  if (isMobile) {
+                    setActiveIndex(props.index);
+                    onHover?.(data[props.index].description);
+                  }
+                }}
+              />
+            )}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 
