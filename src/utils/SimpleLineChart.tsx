@@ -89,7 +89,7 @@ const SimpleLineChart: React.FC<Props> = ({ data, onHover }) => {
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
-          margin={{ top: 20, right: 30, bottom: 40, left: 35 }}
+          margin={{ top: 50, right: 30, bottom: 40, left: 35 }}
           onMouseMove={(e) => {
             if (!isMobile && e.activeTooltipIndex !== undefined && e.activePayload) {
               setActiveIndex(e.activeTooltipIndex);
@@ -105,7 +105,7 @@ const SimpleLineChart: React.FC<Props> = ({ data, onHover }) => {
         >
           <XAxis
             dataKey="name"
-            axisLine={false}
+            // axisLine={false}
             tickLine={false}
             tick={{ fontSize: 12 }}
             label={{
@@ -115,20 +115,24 @@ const SimpleLineChart: React.FC<Props> = ({ data, onHover }) => {
               style: { fill: "#6B7280", fontSize: 12 },
             }}
           />
+
           <YAxis
             domain={[0, 100]}
-            width={30}
-            axisLine={false}
+            width={40}
+            axisLine={true}
             tickLine={false}
             tick={{ fontSize: 12 }}
             label={{
               value: "성장률(%)",
               angle: 0,
               position: "top",
-              offset: -20,
+              offset: 10,
               style: { fill: "#6B7280", fontSize: 12 },
             }}
+            
           />
+
+
           {!isMobile && <Tooltip content={<CustomTooltip />} />}
           <Line
             type="monotone"
