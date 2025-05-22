@@ -76,7 +76,7 @@ const SimpleLineChart: React.FC<Props> = ({ data, onHover }) => {
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
         data={data}
-        margin={{ top: 20, right: 30, bottom: 40, left: 50 }} 
+        margin={{ top: 20, right: 30, bottom: 40, left: 35 }} 
         onMouseMove={(e) => {
           if (e.activeTooltipIndex !== undefined && e.activePayload) {
             setActiveIndex(e.activeTooltipIndex);
@@ -103,7 +103,7 @@ const SimpleLineChart: React.FC<Props> = ({ data, onHover }) => {
 
       <YAxis
         domain={[0, 100]}
-        width={50}
+        width={30}
         axisLine={false}
         tickLine={false}
         tick={{ fontSize: 12 }}
