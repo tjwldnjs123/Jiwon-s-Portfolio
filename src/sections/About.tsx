@@ -41,7 +41,7 @@ const About = () => {
   return (
     <section className="py-20 px-4 max-w-6xl mx-auto text-center">
       <div className="flex justify-center items-center gap-2 mb-6">
-        <CiLink size={40} className="text-gray-500" />
+        {/* <CiLink size={40} className="text-gray-500" /> */}
         <h2 className="text-3xl font-bold">ABOUT ME</h2>
       </div>
       <p className="mb-2 text-lg">가파른 성장곡선을 그리는 개발자 <strong>서지원</strong>입니다.</p>
