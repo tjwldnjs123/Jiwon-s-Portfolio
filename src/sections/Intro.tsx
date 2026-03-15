@@ -11,7 +11,7 @@ const Intro = () => {
       </h1>
 
       <p className="text-lg text-gray-700 dark:text-gray-300 animate__animated animate__fadeInUp animate__delay-1s">
-        프론트엔드 개발자 • React • TypeScript • TailwindCSS
+        풀스택 개발자 • React • TypeScript • Node.js • PostgreSQL
       </p>
     </section>
   );
